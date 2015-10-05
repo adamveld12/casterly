@@ -2,7 +2,6 @@
 
 import $ from 'jquery';
 import { parseString } from "xml2js";
-import Worker from './models/channelImport.worker.js';
 
 const buildSearchUrl = (term) => `https://itunes.apple.com/search?term=${term}&limit=200&entity=podcast&media=podcast`;
 
@@ -39,17 +38,8 @@ export const ImportRss = (feedUrl) => {
             return new Promise((a, r) => {
                 parseString(text, function(err, data){
                   if (err) r(err);
-                  else { 
-                    var channel = data.rss.channel[0];
-                    a(Podcast.convertToCast(feedUrl, channel));
-                    //var worker = new Worker;
-                    //worker.postMessage(JSON.stringify({ feedUrl, channel }));
-                    //worker.onmessage = function({ data: workerResponse }){
-                      //const { results, reason } = JSON.parse(workerResponse);
-                      //console.log('worker completed import');
-                      //if (results) a(results);
-                      //else r(reason)
-                    //}
+                  else {
+                    a(Podcast.convertToCast(feedUrl, data.rss.channel[0]));
                   }
                 });
             });

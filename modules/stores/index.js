@@ -18,7 +18,6 @@ export const Playlist = {
 };
 */
 
-/*
 import ps from './playerStore.js';
 import pa from './playerActions.js';
 
@@ -26,6 +25,6 @@ export const Player = {
   store: ps,
   actions: pa
 };
-*/
+
 
 

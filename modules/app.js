@@ -4,6 +4,8 @@ import './app.less';
 
 import React from 'react';
 import { Router, Route, IndexRoute, Redirect } from 'react-router';
+import { Player } from './components';
+
 import injectTapEventPlugin from "react-tap-event-plugin";
 
 injectTapEventPlugin();
@@ -30,6 +32,7 @@ class App extends React.Component {
     return (
       <section id="main">
         { this.props.children }
+        <Player />
       </section>
     );
   }

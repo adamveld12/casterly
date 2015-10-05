@@ -3,8 +3,9 @@
 import React from 'react';
 import { IconButton, CircularProgress, Avatar, ListItem, ListDivider, Card, CardHeader, CardTitle, CardMedia, CardText, CardActions } from 'material-ui';
 
-import { Search } from '../stores';
+import { Search, Player } from '../stores';
 import { SearchInput } from '../components';
+import { isNullOrWhitespace } from '../utils.js';
 
 
 import './details.less';
@@ -14,7 +15,7 @@ export default class Details extends React.Component {
   constructor(){
     super();
     this.state = { 
-      podcast: { title: "", description: "", image: "", link: "", episodes: [] }, 
+      podcast: { title: "", description: "", image: "", link: "", episodes: [] },
       episodeResults: [],
       loading: true
     };
@@ -47,11 +48,21 @@ export default class Details extends React.Component {
   }
 
   play(){
+    const { podcast: { episodes } } = this.state;
+    Player.actions.playPlaylist({ tracks: episodes.reverse() });
+  }
+
+  playSingle(episode){
+    Player.actions.playPlaylist({ tracks: [episode] });
+  }
+
+  addToQueue(episode){
+    Player.actions.enqueue(episode);
   }
 
   filter(term){
     const { podcast: { episodes } } = this.state;
-    const lowerCaseTerm = term.toLowerCase().trim(' ');
+    const lowerCaseTerm = term.toLowerCase().trim();
     setTimeout(() => {
       this.setState({ episodeResults: episodes.filter(item => item.title.toLowerCase().includes(lowerCaseTerm)) });
     }, 0);
@@ -73,7 +84,7 @@ export default class Details extends React.Component {
     return (
       <section id="castDetails">
         <section className={ loading ? "animated fadeIn loader" : "loader hide"}>
-          <CircularProgress className={ loading ? "animated fadeIn" : "animated fadeOut hide" } size={4} />
+          <CircularProgress className={ loading ? "animated fadeIn" : "animated fadeOut hide" } size={ 4 } />
         </section>
 
         <section className={ loading ? "hide" : "animated fadeIn"} >
@@ -103,20 +114,32 @@ export default class Details extends React.Component {
                           touch={true}
                           onClick={ this.addToPlaylist.bind(this) } />
             </CardActions>
+
             <section className="meta">
               <SearchInput hint="Search episodes" onSubmit={ this.filter.bind(this) } onUpdate={ this.filter.bind(this) } />
             </section>
+
             <ul className="episodeList">
               {
                 episodeResults.map((episode, index) => {
+                  const nestedItems = isNullOrWhitespace(episode.description) ? [] : [
+                      <p className="episodeDetailsDescription" dangerouslySetInnerHTML={{ __html: episode.description }} />
+                  ];
                   return (
-                   <li>
-                    <ListItem leftAvatar={<Avatar src={ episode.image } />}
-                              primaryText={ episode.title }
-                              secondaryTextLines={1}
-                              secondaryText= {
-                                <p dangerouslySetInnerHtml={{ __html: episode.description }}> </p>
-                                } />
+                   <li key={ index }>
+                    <ListItem leftAvatar={<Avatar size={ 50 } src={ episode.image } />}
+                              primaryText={ 
+                                  <header className="episodeHeader">
+                                    <IconButton iconClassName="fa fa-play"
+                                                tooltip="Play"
+                                                onClick={ () => this.playSingle(episode) }/>
+                                    <IconButton iconClassName="fa fa-plus"
+                                                tooltip="Add To Queue"
+                                                onClick={ () => this.addToQueue(episode) } />
+                                    <p>{ episode.title }</p>
+                                  </header> }
+                              initiallyOpen={ false }
+                              nestedItems={ nestedItems } />
                       <ListDivider inset={true} />
                   </li>
                   );
@@ -130,4 +153,3 @@ export default class Details extends React.Component {
     );
   }
 }
-

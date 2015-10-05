@@ -34,7 +34,7 @@ export default class SearchInput extends React.Component {
 
           <IconButton iconClassName="fa fa-search"
                       tooltip="Search"
-                      touch={true}
+                      touch={ true }
                       onClick={ () => this.submit(this.state) } />
         </div>
     );

@@ -1,5 +1,14 @@
 'use strict';
 
+export function toTimeString(value){
+   const hours = Math.floor(value / 3600);
+   const minutes = Math.floor(value / 60) - (hours * 60);
+   const seconds = Math.floor(value) - (minutes * 60) - (hours * 3600);
+
+   const prettify = (v) => v < 10 ? `0${v}` : v;
+   return `${prettify(hours)}:${prettify(minutes)}:${prettify(seconds)}`;
+}
+
 export function slugify(text){
   return text.replace(/[\&]/g, 'and')
              .replace(/[\@]/g, 'at')

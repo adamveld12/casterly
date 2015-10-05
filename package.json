@@ -4,10 +4,12 @@
   "description": "A podcast web app",
   "main": "index.js",
   "scripts": {
-    "build": "webpack --progress --display-modules --colors -d",
+    "devbuild": "webpack --progress --display-modules --colors -d",
+    "build": "webpack --progress --display-modules --colors -p",
     "dev": "webpack-dev-server --progress --colors --hot --watch -d --content-base ./public/",
-    "live": "",
-    "deploy": ""
+    "live": "webpack-dev-server --progress --colors --watch -p --content-base ./public/",
+    "test_deploy": "webpack --progress --display-modules --colors -p && surge -d casterly.surge.sh -p ./public",
+    "deploy": "webpack --progress --display-modules --colors -p && surge -d podcast.veldhousen.ninja -p ./public"
   },
   "keywords": [
     "podcast",
