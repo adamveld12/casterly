@@ -1,10 +1,9 @@
-'use strict';
-
 import './app.less';
 
 import React from 'react';
-import { Router, Route, IndexRoute, Redirect } from 'react-router';
-import { Player } from './components';
+import { render } from 'react-dom'
+import { Router, Route, IndexRoute, Redirect, hashHistory } from 'react-router';
+import Player from './player';
 
 import injectTapEventPlugin from "react-tap-event-plugin";
 
@@ -12,19 +11,19 @@ injectTapEventPlugin();
 
 
 function loadSearch(l, cb) {
-  require.ensure(['./search/index.js'], () => cb(null, require('./search/index.js')));
+  require.ensure(['./search'], () => cb(null, require('./search').default));
 }
 
 function loadDetails(l, cb){
-  require.ensure(['./details/index.js'], () => cb(null, require('./details/index.js')));
+  require.ensure(['./details'], () => cb(null, require('./details').default));
 }
 
 function loadPlaylists(l, cb){
-  require.ensure(['./playlists/index.js'], () => cb(null, require('./playlists/index.js')));
+  require.ensure(['./playlists'], () => cb(null, require('./playlists').default));
 }
 
 function loadPlaylistDetails(l, cb){
-  require.ensure(['./playlistDetails/index.js'], () => cb(null, require('./playlistDetails/index.js')));
+  require.ensure(['./playlistDetails'], () => cb(null, require('./playlistDetails').default));
 }
 
 class App extends React.Component {
@@ -38,9 +37,9 @@ class App extends React.Component {
   }
 }
 
-React.render(
-  <Router>
-    <Route path="/" component={App}>
+render(
+  <Router history={hashHistory}>
+    <Route path="/" component={ App }>
       <IndexRoute getComponent={ loadSearch } />
       <Route path="/search" getComponent={ loadSearch } />
       <Route path="/details/:encodedFeedUrl" getComponent={ loadDetails } />
@@ -49,5 +48,4 @@ React.render(
       <Redirect from="*" to="/" />
     </Route>
   </Router>
-
-, document.body);
+, document.getElementById("app_container"));

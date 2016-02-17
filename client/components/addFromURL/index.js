@@ -49,6 +49,7 @@ export default class AddFromUrlDialog extends React.Component {
 
   render(){
     const { open } = this.props;
+    const { rssFeedUrl, errorText } = this.state;
 
     let customActions = [
       <FlatButton label="Cancel"
@@ -58,26 +59,23 @@ export default class AddFromUrlDialog extends React.Component {
       <FlatButton label="Add Feed"
                   primary={ true }
                   onTouchTap={ () => {
-                    const { rssFeedUrl } = this.state;
                     this.onSubmit(rssFeedUrl);
                   }} />
     ];
 
-    var dialog = (
-      <Dialog actionFocus="rssInput"
-              openImmediately={ true }
+    return (
+      <Dialog actions="rssInput"
+              open={ open }
               title="Add From A Custom RSS Feed Url"
               actions={ customActions }
               modal={ false } >
 
           <TextField ref="rssInput"
                      hintText="An RSS Feed Url"
-                     errorText={ this.state.errorText }
+                     errorText={ errorText }
                      onChange={ this.onChange.bind(this) } />
       </Dialog>
     );
-
-    return open ? dialog : (<div></div>);
   }
 
 }
@@ -85,9 +83,11 @@ export default class AddFromUrlDialog extends React.Component {
 AddFromUrlDialog.propTypes = {
   onSubmit: React.PropTypes.func.isRequired,
   onDismiss: React.PropTypes.func.isRequired,
+  open: React.PropTypes.bool.isRequired
 };
 
 AddFromUrlDialog.defaultProps = {
   onSubmit: function(){},
-  onDismiss: function(){}
+  onDismiss: function(){},
+  open: false
 }

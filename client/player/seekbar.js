@@ -37,12 +37,13 @@ export default class Seekbar extends React.Component {
   render(){
     const { enabled, duration, currentTime } = this.props;
 
+
     return (
           <Slider name="audio-seeker"
                   style={{ margin: "0 5px 5px 5px" }}
                   disabled={ !enabled }
                   step={ 1 } // 1 second
-                  max={ duration } // in seconds
+                  max={ duration || 1 } // in seconds
                   value={ currentTime }
                   onChange={ this.seek.bind(this) }
                   onDragStart={ (evt, other) => this.onSeekStart() }

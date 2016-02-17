@@ -20,7 +20,6 @@ export const SearchPodcasts = (term) => {
   });
 }
 
-
 import { Podcast } from './models';
 
 const corsProxy = (url) => `http://cors.veldhousen.ninja/${url}`;
@@ -38,9 +37,7 @@ export const ImportRss = (feedUrl) => {
             return new Promise((a, r) => {
                 parseString(text, function(err, data){
                   if (err) r(err);
-                  else {
-                    a(Podcast.convertToCast(feedUrl, data.rss.channel[0]));
-                  }
+                  else a(Podcast.convertToCast(feedUrl, data.rss.channel[0]));
                 });
             });
           })

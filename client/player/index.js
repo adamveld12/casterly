@@ -1,25 +1,27 @@
 'use strict';
 
 import React from 'react';
+import { findDOMNode } from 'react-dom'
 
 import { IconButton } from 'material-ui';
 import Seekbar from './seekbar.js';
 import PlayerControls from './controls.js';
 
 
-import { Player } from '../../stores';
+import { Player } from '../stores';
 
 import './player.less';
 
 
-export default class PlayerComponent extends React.Component {
+export default class extends React.Component {
   constructor(){
     super();
     this.state = { track: { title: "", link: "" }, queue: [], currentTime: 0, duration: 1, buffering: false };
   }
 
   componentDidMount(){
-    const audioSource = React.findDOMNode(this.refs.audioSource);
+    const audioSource = this.audioSource = findDOMNode(this.refs.audioSource);
+
     var { audioCurrentTime, audioDuration } = audioSource;
     this.setState({ currentTime: audioCurrentTime, duration: audioDuration });
 
@@ -27,7 +29,7 @@ export default class PlayerComponent extends React.Component {
       this.setState({ currentTime: audioSource.currentTime, duration: audioSource.duration, buffering: false });
     });
 
-    audioSource.addEventListener('ended', () => {
+    this.audioSource.addEventListener('ended', () => {
       const { queue, playing, repeat } = this.state;
 
       if (canRepeat)
@@ -48,21 +50,22 @@ export default class PlayerComponent extends React.Component {
   }
 
   seekTo(time){
-    const audioSource = React.findDOMNode(this.refs.audioSource);
-    audioSource.currentTime = time;
+    this.audioSource.currentTime = time;
     this.setState({ currentTime: time, buffering: true });
   }
 
   play(){
-    const audioSource = React.findDOMNode(this.refs.audioSource);
-    audioSource.play();
-    this.setState({ playing: true });
+    if(this.audioSource){
+      this.audioSource.play();
+      this.setState({ playing: true });
+    }
   }
 
   pause(){
-    const audioSource = React.findDOMNode(this.refs.audioSource);
-    audioSource.pause();
-    this.setState({ playing: false });
+    if(this.audioSource){
+      this.audioSource.pause();
+      this.setState({ playing: false });
+    }
   }
 
   render(){
@@ -81,8 +84,8 @@ export default class PlayerComponent extends React.Component {
         <PlayerControls enabled={ canPlay }
                         playing={ playing }
                         queue={ queue }
-                        onPlay={ () => this.play() }
-                        onPause={ () => this.pause() }
+                        onPlay={ this.play.bind(this) }
+                        onPause={ this.pause.bind(this) }
                     />
 
         <audio ref="audioSource" src={ track.downloadLink } />

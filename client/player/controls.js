@@ -7,7 +7,7 @@ import { IconButton, IconMenu } from 'material-ui';
 const MenuItem = require('material-ui/lib/menus/menu-item');
 const MenuDivider = require('material-ui/lib/menus/menu-divider');
 
-import { Player } from '../../stores';
+import { Player } from '../stores';
 
 import './controls.less';
 
@@ -56,6 +56,7 @@ export default class Controls extends React.Component {
     const hasNext = queue.length > 0;
     const queueElement = <IconButton iconClassName="fa fa-list-ul"
                                       tooltip="Play Queue"
+                                      tooltipPosition="top-center"
                                       touch={ true } />
     return (
       <section id="playerControl">
@@ -74,22 +75,26 @@ export default class Controls extends React.Component {
           <IconButton iconClassName="fa fa-step-backward"
                       disabled={ !hasNext }
                       touch={ true }
+                      tooltipPosition="top-center"
                       onClick={ () => this.previousTrack() } />
 
           <IconButton iconClassName={ playing ? "fa fa-pause" : hasNext ? "fa fa-play" : "fa fa-stop" }
                       disabled={ !hasNext }
                       touch={ true }
+                      tooltipPosition="top-center"
                       onClick={ () => playing && hasNext ? this.pause() : this.play() } />
 
           <IconButton iconClassName="fa fa-step-forward"
                       disabled={ !hasNext }
                       touch={ true }
+                      tooltipPosition="top-center"
                       onClick={ () => this.nextTrack() } />
 
           <IconButton iconClassName={ repeat && playing ? "fa fa-repeat fa-spin" : "fa fa-repeat" }
                       disabled={ !hasNext }
                       tooltip="repeat"
                       touch={ true }
+                      tooltipPosition="top-center"
                       onClick={ () => this.setState({ repeat: !repeat }) } />
 
       </section>
@@ -103,8 +108,8 @@ Controls.propTypes = {
   playing: React.PropTypes.bool,
   onPlay: React.PropTypes.func.isRequired,
   onPause: React.PropTypes.func.isRequired,
-  onNext: React.PropTypes.func.isRequired,
-  onPrevious: React.PropTypes.func.isRequired,
+  onNext: React.PropTypes.func,
+  onPrevious: React.PropTypes.func,
 };
 
 Controls.defaultProps = {

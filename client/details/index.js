@@ -1,7 +1,19 @@
 'use strict';
 
 import React from 'react';
-import { IconButton, CircularProgress, Avatar, ListItem, ListDivider, Card, CardHeader, CardTitle, CardMedia, CardText, CardActions } from 'material-ui';
+import {
+    IconButton,
+    CircularProgress,
+    Avatar,
+    ListItem,
+    Divider,
+    Card,
+    CardHeader,
+    CardTitle,
+    CardMedia,
+    CardText,
+    CardActions
+} from 'material-ui';
 
 import { Search, Player } from '../stores';
 import { SearchInput } from '../components';
@@ -25,6 +37,7 @@ export default class Details extends React.Component {
     Search.store.on('change', ()=> {
       const { feedUrl } = this.state;
       const podcast = Search.store.getDetailsFor(feedUrl);
+
       if (podcast) {
         this.setState({ loading: false, podcast, episodeResults: podcast.episodes });
       }
@@ -63,9 +76,21 @@ export default class Details extends React.Component {
   filter(term){
     const { podcast: { episodes } } = this.state;
     const lowerCaseTerm = term.toLowerCase().trim();
-    setTimeout(() => {
-      this.setState({ episodeResults: episodes.filter(item => item.title.toLowerCase().includes(lowerCaseTerm)) });
-    }, 0);
+
+    eps = [];
+
+    episodes.forEach((episode, index) => {
+      setTimeout(() => {
+        if (item.title.toLowerCase().includes(lowerCaseTerm)){
+          eps.push(episodes);
+          this.setState({ episodeResults:  eps });
+        }
+
+      }, index * 500);
+    });
+
+    episodes.filter(item => item.title.toLowerCase().includes(lowerCaseTerm))
+
   }
 
   render(){
@@ -127,7 +152,7 @@ export default class Details extends React.Component {
                   ];
                   return (
                    <li key={ index }>
-                    <ListItem leftAvatar={<Avatar size={ 50 } src={ episode.image } />}
+                    <ListItem key={ index } leftAvatar={<Avatar size={ 50 } src={ episode.image } />}
                               primaryText={ 
                                   <header className="episodeHeader">
                                     <IconButton iconClassName="fa fa-play"
@@ -140,7 +165,7 @@ export default class Details extends React.Component {
                                   </header> }
                               initiallyOpen={ false }
                               nestedItems={ nestedItems } />
-                      <ListDivider inset={true} />
+                      <Divider inset={true} />
                   </li>
                   );
                 })

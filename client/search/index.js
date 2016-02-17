@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { IconButton, CircularProgress } from 'material-ui';
-import { SearchInput, PodcastCard, AddFromFeedDialog, Intro } from '../components';
+import { SearchInput, PodcastCard, AddFromURL, Intro } from '../components';
 
 import { Search } from '../stores';
 
@@ -12,13 +12,20 @@ export default class SearchPage extends React.Component {
   constructor(){
     super();
     this.state = { podcastResults: [], loading: false };
+    this.updatePodcasts();
+  }
+
+  updatePodcasts(){
+    const podcastResults = Search.store.getPodcasts();
+    this.setState({ podcastResults, loading: false });
   }
 
   componentDidMount(){
-    Search.store.on('change', () => {
-      const podcastResults = Search.store.getPodcasts();
-      this.setState({ podcastResults, loading: false });
-    });
+    Search.store.addChangeListener(this.updatePodcasts.bind(this));
+  }
+
+  componentWillUnmount(){
+    Search.store.removeChangeListener(this.updatePodcasts.bind(this));
   }
 
   search(value){
@@ -44,7 +51,7 @@ export default class SearchPage extends React.Component {
   render(){
     const { loading, podcastResults, showDialog } = this.state;
 
-    const dialog = (<AddFromFeedDialog open={ showDialog }
+    const dialog = (<AddFromURL open={ showDialog }
                                        onDismiss={ this.closeDialog.bind(this) }
                                        onSubmit={ this.openDetails.bind(this) } />);
     return (
