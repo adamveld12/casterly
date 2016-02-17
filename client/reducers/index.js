@@ -1,5 +1,10 @@
 import { combineReducers } from 'redux'
 
-import { reducer as search } from './search.js'
+import { reducer as search, fetchSearchResultsIfNeeded, openDialog } from './search.js'
 
-export default combineReducers({ search })
+export const reducers = combineReducers({ search })
+
+export const searchActions = {
+  fetchSearchResultsIfNeeded,
+  openDialog,
+}

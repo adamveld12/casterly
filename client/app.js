@@ -3,13 +3,14 @@ import './app.less'
 import React, { Component } from 'react'
 import injectTapEventPlugin from "react-tap-event-plugin"
 import { render } from 'react-dom'
-import { createStore, applyMiddleware } from 'redux'
-import rootReducer from './reducers'
+import { createStore, applyMiddleware, compose } from 'redux'
+import { reducers as rootReducer } from './reducers'
 import thunkMiddleware from 'redux-thunk'
 import { Provider } from 'react-redux'
 import { Router, Route, IndexRoute, Redirect, hashHistory } from 'react-router'
 
 import Player from './player'
+import DevMonitor from './devtools.js'
 
 
 injectTapEventPlugin()
@@ -21,13 +22,14 @@ const pages = {
 }
 
 
-const store = createStore(rootReducer, applyMiddleware(thunkMiddleware))
+const store = createStore(rootReducer, compose( applyMiddleware(thunkMiddleware), DevMonitor.instrument()))
 
 
 class App extends Component {
   render(){
     return (
       <section id="main">
+        <DevMonitor />
         { this.props.children }
         <Player />
       </section>

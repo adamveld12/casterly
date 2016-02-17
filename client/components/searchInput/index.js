@@ -1,41 +1,34 @@
-'use strict';
+import React, { Component } from 'react'
 
-import React from 'react';
+import { TextField, IconButton } from 'material-ui'
 
-import { TextField, IconButton } from 'material-ui';
+import './searchInput.less'
 
-import './searchInput.less';
-
-export default class SearchInput extends React.Component {
-  constructor() {
-    super();
-    this.state = { term: "" };
-  }
-
-  submit({ term }){
-    const { onSubmit } = this.props;
-    if (onSubmit)
-      onSubmit(term || "");
+export default class SearchInput extends Component {
+  submit(term){
+    const { onSubmit } = this.props
+   onSubmit && onSubmit(term || "")
   }
 
   render(){
-    const { hint, disabled, onUpdate } = this.props;
+    const { hint, disabled, onUpdate } = this.props
+    const { value } = this.state
+
     return (
         <div className="searchInputComponent">
           <TextField fullWidth
                      hintText={ hint }
                      disabled={ disabled }
-                     onKeyDown={ ({ keyCode }) => keyCode === 13 && this.submit(this.state) }
+                     onEnterKeyDown={ () => this.submit(value) }
                      onChange={ ({ target: { value }}) => {
-                        this.setState({ term: value });
-                        if (onUpdate)
-                          onUpdate(value);
+                        this.setState({ value })
+                        onUpdate && onUpdate(value)
                      }} />
 
           <IconButton iconClassName="fa fa-search"
                       tooltip="Search"
                       touch={ true }
-                      onClick={ () => this.submit(this.state) } />
+                      onClick={ () => this.submit(value) } />
         </div>
     );
   }
@@ -43,14 +36,13 @@ export default class SearchInput extends React.Component {
 
 SearchInput.propTypes = {
   hint: React.PropTypes.string,
-  onSubmit: React.PropTypes.func,
+  onSubmit: React.PropTypes.func.isRequired,
   onUpdate: React.PropTypes.func,
-  disable: React.PropTypes.bool
+  disable: React.PropTypes.bool,
 };
 
 SearchInput.defaultProps = {
   hint: "Type here to search",
-  onSubmit: function(){},
   onUpdate: function(){},
   disable: false
 };
