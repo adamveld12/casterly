@@ -1,12 +1,11 @@
-'use strict';
-import searchStore from './searchStore.js';
-import searchActions from './searchActions.js';
+import searchStore from './searchStore.js'
+import searchActions from './searchActions.js'
 
 
 export const Search = {
   store: searchStore,
-  actions: searchActions
-};
+  actions: searchActions,
+}
 
 /*
 import p1s from './playlistStore.js';
@@ -25,6 +24,4 @@ export const Player = {
   store: ps,
   actions: pa
 };
-
-
 

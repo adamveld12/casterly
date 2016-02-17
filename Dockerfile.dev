@@ -2,7 +2,6 @@ FROM node:latest
 
 WORKDIR /usr/src/app
 
-RUN npm install webpack webpack-dev-server surge -g
 
 VOLUME ["/usr/src/app"]
 

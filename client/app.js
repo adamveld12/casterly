@@ -1,51 +1,51 @@
-import './app.less';
+import './app.less'
 
-import React from 'react';
+import React, { Component } from 'react'
+import injectTapEventPlugin from "react-tap-event-plugin"
 import { render } from 'react-dom'
-import { Router, Route, IndexRoute, Redirect, hashHistory } from 'react-router';
-import Player from './player';
+import { createStore, applyMiddleware } from 'redux'
+import rootReducer from './reducers'
+import thunkMiddleware from 'redux-thunk'
+import { Provider } from 'react-redux'
+import { Router, Route, IndexRoute, Redirect, hashHistory } from 'react-router'
 
-import injectTapEventPlugin from "react-tap-event-plugin";
-
-injectTapEventPlugin();
+import Player from './player'
 
 
-function loadSearch(l, cb) {
-  require.ensure(['./search'], () => cb(null, require('./search').default));
+injectTapEventPlugin()
+
+const pages = {
+  Search:  (l, cb) => require.ensure(['./search'], () => cb(null, require('./search').default)),
+  Details: (l, cb) => require.ensure(['./details'], () => cb(null, require('./details').default)),
+  Playlists: (l, cb) => require.ensure(['./playlists'], () => cb(null, require('./playlists').default)),
 }
 
-function loadDetails(l, cb){
-  require.ensure(['./details'], () => cb(null, require('./details').default));
-}
 
-function loadPlaylists(l, cb){
-  require.ensure(['./playlists'], () => cb(null, require('./playlists').default));
-}
+const store = createStore(rootReducer, applyMiddleware(thunkMiddleware))
 
-function loadPlaylistDetails(l, cb){
-  require.ensure(['./playlistDetails'], () => cb(null, require('./playlistDetails').default));
-}
 
-class App extends React.Component {
+class App extends Component {
   render(){
     return (
       <section id="main">
         { this.props.children }
         <Player />
       </section>
-    );
+    )
   }
 }
 
 render(
-  <Router history={hashHistory}>
-    <Route path="/" component={ App }>
-      <IndexRoute getComponent={ loadSearch } />
-      <Route path="/search" getComponent={ loadSearch } />
-      <Route path="/details/:encodedFeedUrl" getComponent={ loadDetails } />
-      <Route path="/playlists" getComponent={ loadPlaylists } />
-      <Route path="/playlist/:name" getComponent={ loadPlaylistDetails } />
-      <Redirect from="*" to="/" />
-    </Route>
-  </Router>
-, document.getElementById("app_container"));
+  <Provider store={ store }>
+    <Router history={hashHistory}>
+      <Route path="/" component={ App }>
+        <IndexRoute getComponent={ pages.Search } />
+        <Route path="/search" getComponent={ pages.Search } />
+        <Route path="/details/:encodedFeedUrl" getComponent={ pages.Details } />
+        <Route path="/playlists" getComponent={ pages.Playlists } />
+        <Route path="/playlist/:name" getComponent={ pages.Playlists } />
+        <Redirect from="*" to="/" />
+      </Route>
+    </Router>
+  </Provider>
+, document.getElementById("app_container"))
