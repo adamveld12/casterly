@@ -1,6 +1,7 @@
 var webpack = require('webpack');
 var path = require('path');
 var commonsPlugin = new webpack.optimize.CommonsChunkPlugin('common.js');
+var reactHotPlugin = new webpack.HotModuleReplacementPlugin();
 
 module.exports = {
   entry: {
@@ -16,8 +17,8 @@ module.exports = {
       {
         test: /\.(worker\.)?js(x)?$/,
         exclude: /(node_modules|bower_components)/,
-        loader: 'babel',
-        query: { presets: ['react', 'es2015'] }
+        loader: 'react-hot!babel?presets[]=react,presets[]=es2015',
+        //query: { presets: ['react', 'es2015'] }
       },
       { test: /\.less$/, loader: 'style!css!less' },
       { test: /\.css$/, loader: "style!css" },

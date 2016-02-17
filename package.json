@@ -4,10 +4,10 @@
   "description": "A podcast web app",
   "main": "index.js",
   "scripts": {
-    "docker-dev": "webpack-dev-server --config webpack.config.docker.js --watch --progress --colors --hot --inline -d --host 0.0.0.0 --port 80",
+    "docker-dev": "webpack-dev-server --config webpack.config.docker.js --watch --progress --colors --inline --hot -d --host 0.0.0.0 --port 80",
     "devbuild": "webpack --progress --display-modules --colors -d",
     "build": "webpack --progress --display-modules --colors -p",
-    "dev": "docker build -f ./Dockerfile.dev -t casterly-dev . && docker run -v $PWD:/usr/src/app -p 80:80 casterly-dev",
+    "dev": "docker build -f ./Dockerfile.dev -t casterly-dev . && docker run -v $PWD:/usr/src/app -it --rm -p 80:80 casterly-dev",
     "live": "webpack-dev-server --progress --colors --watch -p --content-base ./public/",
     "test_deploy": "webpack --progress --display-modules --colors -p && surge -d casterly.surge.sh -p ./public",
     "deploy": "webpack --progress --display-modules --colors -p && surge -d podcast.veldhousen.ninja -p ./public"
@@ -28,6 +28,7 @@
     "file-loader": "^0.8.5",
     "less": "^2.5.3",
     "less-loader": "^2.2.1",
+    "react-hot-loader": "^1.3.0",
     "style-loader": "^0.13.0",
     "url-loader": "^0.5.7",
     "webpack": "^1.12.2",
